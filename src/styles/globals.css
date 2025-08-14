@@ -1,0 +1,71 @@
+:root {
+  color-scheme: dark;
+  
+  --bg-color-1: #080808;
+  --bg-color-2: #2a0e1e;
+  --bg-color-3: #113719;
+  --bg-color-4: #40220a;
+  --bg-animation-duration: 3s;
+  
+  --spacing-xs: 0.25rem;
+  --spacing-sm: 0.5rem;
+  --spacing-md: 1rem;
+  --spacing-lg: 1.5rem;
+  --spacing-xl: 2rem;
+  --border-radius-sm: 0.25rem;
+  --border-radius-md: 0.5rem;
+  --border-radius-lg: 1rem;
+  --transition-fast: 0.15s ease;
+  --transition-normal: 0.3s ease;
+  --transition-slow: 0.5s ease;
+  --background: #000000;
+  --text: #ffffff;
+  --neon-default: #00ffff;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background: var(--background);
+  color: var(--text);
+  overflow: hidden;
+  margin: 0;
+  padding: 0;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#root {
+  width: 100vw;
+  height: 100vh;
+}
+
+/* Animated color-cycling background */
+.background-gradient {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: 0;
+  background: radial-gradient(circle at center, 
+    var(--bg-color-1) 0%, 
+    var(--bg-color-1) 25%, 
+    var(--bg-color-2) 50%, 
+    var(--bg-color-3) 75%, 
+    var(--bg-color-4) 100%
+  );
+  animation: gradientShift var(--bg-animation-duration, 3s) infinite linear;
+  opacity: 0.8;
+}
+
+@keyframes gradientShift {
+  0%, 100% { filter: hue-rotate(0deg); }
+  33% { filter: hue-rotate(120deg); }
+  66% { filter: hue-rotate(240deg); }
+}
