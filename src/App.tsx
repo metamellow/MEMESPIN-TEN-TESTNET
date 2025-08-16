@@ -1,5 +1,6 @@
 import { Game } from './components/Game';
 import { GameContainer } from './components/GameContainer';
+import { ErrorBoundary } from './components/ErrorBoundary';
 import './styles/globals.css';
 
 function App() {
@@ -7,7 +8,9 @@ function App() {
     <div className="App">
       <div className="background-gradient"></div>
       <GameContainer>
-        <Game />
+        <ErrorBoundary>
+          <Game />
+        </ErrorBoundary>
       </GameContainer>
     </div>
   );
