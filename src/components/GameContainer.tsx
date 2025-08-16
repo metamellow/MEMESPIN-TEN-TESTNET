@@ -43,7 +43,7 @@ const Container = styled.div<{
   width: 100%;
   height: 100%;
   padding: 40px;
-  background: rgba(239, 25, 25, 0.95);
+  background:rgb(13, 13, 13);
   border-radius: var(--border-radius-lg);
   box-shadow: 
     0 0 30px rgba(0, 0, 0, 0.3),
@@ -63,7 +63,7 @@ const Container = styled.div<{
     position: absolute;
     inset: 0;
     border-radius: var(--border-radius-lg);
-    border: 2px solid rgba(0, 255, 255, 0.2);
+    border: 2px solid rgb(58, 38, 65);
     pointer-events: none;
     transition: border-color 0.3s ease;
   }

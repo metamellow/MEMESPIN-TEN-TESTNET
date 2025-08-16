@@ -10,9 +10,9 @@ export const Game = () => {
   const [chosenColor, setChosenColor] = useState<string | null>(null);
 
   const colors = [
-    { name: 'ORANGE', color: '#ff8c00' },
-    { name: 'PINK', color: '#ff1493' },
-    { name: 'GREEN', color: '#32cd32' }
+    { name: 'ORANGE', color: '#ff9a2d' },
+    { name: 'PINK', color: '#ee4d9f' },
+    { name: 'GREEN', color: '#4ddc4d' }
   ];
 
   // Generate random spin parameters with enhanced variability
