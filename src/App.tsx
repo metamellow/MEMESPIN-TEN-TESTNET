@@ -1,12 +1,14 @@
-import React from 'react';
 import { Game } from './components/Game';
+import { GameContainer } from './components/GameContainer';
 import './styles/globals.css';
 
 function App() {
   return (
     <div className="App">
       <div className="background-gradient"></div>
-      <Game />
+      <GameContainer>
+        <Game />
+      </GameContainer>
     </div>
   );
 }

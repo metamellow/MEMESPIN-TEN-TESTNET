@@ -1,4 +1,5 @@
-import React, { ReactNode, useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
+import type { ReactNode } from 'react';
 import styled from 'styled-components';
 import { motion } from 'framer-motion';
 
@@ -42,7 +43,7 @@ const Container = styled.div<{
   width: 100%;
   height: 100%;
   padding: 40px;
-  background: rgba(18, 18, 18, 0.95);
+  background: rgba(239, 25, 25, 0.95);
   border-radius: var(--border-radius-lg);
   box-shadow: 
     0 0 30px rgba(0, 0, 0, 0.3),

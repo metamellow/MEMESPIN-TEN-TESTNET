@@ -1,26 +1,55 @@
 :root {
   color-scheme: dark;
   
+  /* Background Colors */
   --bg-color-1: #080808;
   --bg-color-2: #2a0e1e;
   --bg-color-3: #113719;
   --bg-color-4: #40220a;
   --bg-animation-duration: 3s;
   
+  /* Spacing System */
   --spacing-xs: 0.25rem;
   --spacing-sm: 0.5rem;
   --spacing-md: 1rem;
   --spacing-lg: 1.5rem;
   --spacing-xl: 2rem;
+  
+  /* Border Radius */
   --border-radius-sm: 0.25rem;
   --border-radius-md: 0.5rem;
   --border-radius-lg: 1rem;
+  
+  /* Transitions */
   --transition-fast: 0.15s ease;
   --transition-normal: 0.3s ease;
   --transition-slow: 0.5s ease;
+  
+  /* Colors */
   --background: #000000;
   --text: #ffffff;
   --neon-default: #00ffff;
+  
+  /* ===== GAME ELEMENT POSITIONING ===== */
+  /* Wheel Positioning */
+  --wheel-top: 200px;           /* Move wheel up/down */
+  --wheel-left: 29%;            /* Move wheel left/right (50% = center) */
+  --wheel-size: 400px;          /* Make wheel bigger/smaller */
+  
+  /* Display Panel Positioning */
+  --display-top: 45px;          /* Move display up/down */
+  --display-width: 600px;       /* Make display wider/narrower */
+  --display-height: 85px;       /* Make display taller/shorter */
+  
+  /* Button Positioning */
+  --buttons-bottom: 140px;      /* Move buttons up/down */
+  --buttons-gap: 35px;          /* Space between buttons */
+  --button-width: 150px;        /* Make buttons wider/narrower */
+  --button-height: 65px;        /* Make buttons taller/shorter */
+  
+  /* Game Container Sizing */
+  --game-width: 1200px;
+  --game-height: 900px;
 }
 
 * {
@@ -45,7 +74,7 @@ body {
   height: 100vh;
 }
 
-/* Animated color-cycling background */
+/* ===== BACKGROUND ANIMATION ===== */
 .background-gradient {
   position: fixed;
   top: 0;
@@ -68,4 +97,150 @@ body {
   0%, 100% { filter: hue-rotate(0deg); }
   33% { filter: hue-rotate(120deg); }
   66% { filter: hue-rotate(240deg); }
+}
+
+/* ===== GAME STYLING ===== */
+.game-container {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-wrapper {
+  position: relative;
+  width: var(--game-width);
+  height: var(--game-height);
+}
+
+.game-wheel {
+  position: absolute;
+  top: var(--wheel-top);
+  left: var(--wheel-left);
+  transform: translateX(-50%);
+  width: var(--wheel-size);
+  height: var(--wheel-size);
+  background-image: url('../../resources/images/wheel.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 50%;
+  z-index: 1; /* Wheel is underneath */
+}
+
+.game-machine {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('../../resources/images/machine.png');
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  z-index: 2; /* Machine is on top */
+  pointer-events: none; /* Allow clicks to pass through to wheel */
+}
+
+.game-display {
+  position: absolute;
+  top: var(--display-top);
+  left: 50%;
+  transform: translateX(-50%);
+  width: var(--display-width);
+  height: var(--display-height);
+  background: rgba(0, 0, 0, 0.9);
+  border-radius: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 35px;
+  color: white;
+  font-family: 'Courier New', monospace;
+  font-size: 24px;
+  font-weight: bold;
+  z-index: 3; /* Display is on top */
+  pointer-events: auto; /* Re-enable clicks for display */
+}
+
+.game-points {
+  color: #00ff00;
+  font-size: 32px;
+}
+
+.game-connect-button {
+  background: #ff1493;
+  color: white;
+  border: none;
+  padding: 18px 35px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 18px;
+  transition: all var(--transition-normal);
+}
+
+.game-connect-button:hover {
+  background: #ff69b4;
+  transform: scale(1.05);
+}
+
+.game-buttons {
+  position: absolute;
+  bottom: var(--buttons-bottom);
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: var(--buttons-gap);
+  z-index: 3; /* Buttons are on top */
+  pointer-events: auto; /* Re-enable clicks for buttons */
+}
+
+.game-color-button {
+  width: var(--button-width);
+  height: var(--button-height);
+  border: none;
+  border-radius: 15px;
+  font-weight: bold;
+  font-size: 22px;
+  color: white;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+}
+
+.game-color-button:hover:not(:disabled) {
+  transform: scale(1.05);
+  box-shadow: 0 0 25px currentColor;
+}
+
+.game-color-button:disabled {
+  cursor: not-allowed;
+  opacity: 0.6;
+}
+
+.game-result {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 25px 50px;
+  border-radius: 15px;
+  font-size: 28px;
+  font-weight: bold;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+  z-index: 100;
+}
+
+.game-result.show {
+  opacity: 1;
+}
+
+.game-result.win {
+  background: rgba(0, 255, 0, 0.95);
+}
+
+.game-result.lose {
+  background: rgba(255, 0, 0, 0.95);
 }
