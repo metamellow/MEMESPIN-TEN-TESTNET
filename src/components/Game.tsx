@@ -283,7 +283,7 @@ export const Game = ({ networkMessage }: GameProps) => {
             }}
             title="Disconnect Wallet"
           >
-            🔌
+            ⛓️‍💥
           </button>
         )}
       </div>
