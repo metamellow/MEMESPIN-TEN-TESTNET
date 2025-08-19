@@ -199,6 +199,11 @@ export const Game = ({ networkMessage }: GameProps) => {
             <div className="game-connect-message">
               {networkMessage || 'CLICK BUTTONS TO CONNECT'}
             </div>
+          ) : networkMessage ? (
+            // Show network message even when connected if on wrong network
+            <div className="game-connect-message">
+              {networkMessage}
+            </div>
           ) : userMessage ? (
             <div className="game-user-message">
               {userMessage}
@@ -222,7 +227,8 @@ export const Game = ({ networkMessage }: GameProps) => {
             </div>
           )}
           
-          {error && (
+          {/* Only show error if no network message and there's an error */}
+          {error && !networkMessage && (
             <div className="game-error">
               {error}
             </div>
