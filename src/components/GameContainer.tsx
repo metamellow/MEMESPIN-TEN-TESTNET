@@ -20,6 +20,8 @@ const OuterContainer = styled.div<{ $outerPadding: string }>`
   min-height: 0;
 `;
 
+
+
 // Container that gets scaled
 const ScaledContainer = styled(motion.div)<{ $scale: number; $size: string }>`
   box-sizing: border-box;
