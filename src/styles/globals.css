@@ -364,6 +364,36 @@ body {
   transform: scale(0.95);
 }
 
+/* ===== DISCONNECT BUTTON ===== */
+.game-disconnect-button {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 0, 0, 0.8);
+  border: 2px solid var(--color-border);
+  color: var(--color-text);
+  font-size: 20px;
+  cursor: pointer;
+  transition: all var(--transition-fast);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.game-disconnect-button:hover {
+  background: rgba(255, 0, 0, 0.9);
+  border-color: var(--color-error);
+  transform: scale(1.1);
+}
+
+.game-disconnect-button:active {
+  transform: scale(0.95);
+}
+
 /* ===== LOADING SPINNER ===== */
 .loading-spinner {
   display: flex;

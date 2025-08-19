@@ -7,7 +7,11 @@ import { calculateSpin, updateStateAfterSpin } from '../utils/spinningLogic';
 import { Confetti } from './Confetti';
 import { soundManager } from '../utils/soundManager';
 
-export const Game = () => {
+interface GameProps {
+  networkMessage?: string | null;
+}
+
+export const Game = ({ networkMessage }: GameProps) => {
   const { connectWallet: privyConnectWallet } = usePrivy();
   const {
     playGame, 
@@ -193,7 +197,7 @@ export const Game = () => {
         <div className="game-display">
           {!isConnected ? (
             <div className="game-connect-message">
-              CLICK BUTTONS TO CONNECT
+              {networkMessage || 'CLICK BUTTONS TO CONNECT'}
             </div>
           ) : userMessage ? (
             <div className="game-user-message">
@@ -267,6 +271,21 @@ export const Game = () => {
         >
           {soundManager.isSoundMuted() ? '🔇' : '🔊'}
         </button>
+
+        {/* Disconnect button - only show when connected */}
+        {isConnected && (
+          <button
+            className="game-disconnect-button"
+            onClick={() => {
+              soundManager.play('click');
+              // Use Privy's logout function
+              privyConnectWallet();
+            }}
+            title="Disconnect Wallet"
+          >
+            ❌
+          </button>
+        )}
       </div>
     </div>
   );
