@@ -12,7 +12,7 @@ interface GameProps {
 }
 
 export const Game = ({ networkMessage }: GameProps) => {
-  const { connectWallet: privyConnectWallet } = usePrivy();
+  const { connectWallet: privyConnectWallet, logout } = usePrivy();
   const {
     playGame, 
     isLoading, 
@@ -279,11 +279,11 @@ export const Game = ({ networkMessage }: GameProps) => {
             onClick={() => {
               soundManager.play('click');
               // Use Privy's logout function
-              privyConnectWallet();
+              logout();
             }}
             title="Disconnect Wallet"
           >
-            ❌
+            🔌
           </button>
         )}
       </div>

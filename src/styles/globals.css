@@ -372,7 +372,7 @@ body {
   width: 50px;
   height: 50px;
   border-radius: 50%;
-  background: rgba(255, 0, 0, 0.8);
+  background: rgba(0, 0, 0, 0.8);
   border: 2px solid var(--color-border);
   color: var(--color-text);
   font-size: 20px;
@@ -385,8 +385,8 @@ body {
 }
 
 .game-disconnect-button:hover {
-  background: rgba(255, 0, 0, 0.9);
-  border-color: var(--color-error);
+  background: rgba(0, 0, 0, 0.9);
+  border-color: var(--color-primary);
   transform: scale(1.1);
 }
 
