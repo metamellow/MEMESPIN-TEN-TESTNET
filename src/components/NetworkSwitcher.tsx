@@ -1,25 +1,40 @@
 import { useEffect, useState } from 'react';
-import { useAccount, useSwitchChain } from '@privy-io/wagmi';
+import { useWallets } from '@privy-io/react-auth';
 import { tenChain } from '../utils/wagmiConfig';
 
 export function NetworkSwitcher() {
-  const { chainId } = useAccount();
-  const { switchChain } = useSwitchChain();
+  const { wallets } = useWallets();
   const [showSwitchMessage, setShowSwitchMessage] = useState(false);
 
   useEffect(() => {
-    if (chainId && chainId !== tenChain.id) {
-      // Try to auto-switch
-      switchChain({ chainId: tenChain.id }).catch(() => {
-        // If auto-switch fails, show manual switch message
-        setShowSwitchMessage(true);
-      });
-    } else {
-      setShowSwitchMessage(false);
+    if (wallets.length > 0) {
+      const wallet = wallets[0];
+      
+      // Try to get the current chain ID
+      const checkAndSwitchNetwork = async () => {
+        try {
+          // Try to get the provider and switch network
+          const provider = await wallet.getEthereumProvider();
+          if (provider) {
+            // Try to switch to TEN testnet
+            await provider.request({
+              method: 'wallet_switchEthereumChain',
+              params: [{ chainId: `0x${tenChain.id.toString(16)}` }]
+            });
+            setShowSwitchMessage(false);
+          }
+        } catch (error) {
+          // If switch fails, show manual switch message
+          console.log('Network switch failed, showing manual message');
+          setShowSwitchMessage(true);
+        }
+      };
+      
+      checkAndSwitchNetwork();
     }
-  }, [chainId, switchChain]);
+  }, [wallets]);
 
-  if (!showSwitchMessage || chainId === tenChain.id) {
+  if (!showSwitchMessage) {
     return null;
   }
 
