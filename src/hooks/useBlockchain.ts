@@ -3,6 +3,7 @@ import { usePrivy, useWallets } from '@privy-io/react-auth';
 import { BlockchainGameLogic } from '../utils/blockchainLogic';
 import type { GameResult, ContractGameConfig } from '../utils/blockchainLogic';
 import { formatEther } from 'viem';
+import { tenChain } from '../utils/wagmiConfig';
 
 export function useBlockchain() {
   const { login, authenticated } = usePrivy();
@@ -14,8 +15,24 @@ export function useBlockchain() {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState<string>('');
   const [betAmount, setBetAmount] = useState<string>('0.0001'); // Default min bet
+  const [isOnCorrectNetwork, setIsOnCorrectNetwork] = useState(false);
 
-
+  // Check if wallet is on the correct network
+  const checkNetwork = useCallback(async (wallet: any) => {
+    try {
+      const provider = await wallet.getEthereumProvider();
+      if (provider) {
+        const currentChainId = await provider.request({ method: 'eth_chainId' });
+        const isCorrect = currentChainId === `0x${tenChain.id.toString(16)}`;
+        setIsOnCorrectNetwork(isCorrect);
+        return isCorrect;
+      }
+    } catch (error) {
+      console.error('Failed to check network:', error);
+      setIsOnCorrectNetwork(false);
+    }
+    return false;
+  }, []);
 
   // Initialize blockchain logic when wallet is connected
   useEffect(() => {
@@ -24,6 +41,14 @@ export function useBlockchain() {
       
       const initializeWallet = async () => {
         try {
+          // First check if we're on the correct network
+          const onCorrectNetwork = await checkNetwork(wallet);
+          if (!onCorrectNetwork) {
+            // Don't initialize game logic if on wrong network
+            setError('');
+            return;
+          }
+
           // Debug: Log the wallet object to see its structure
           console.log('Wallet object:', wallet);
           console.log('Wallet type:', wallet.walletClientType);
@@ -69,6 +94,31 @@ export function useBlockchain() {
           
           // Load initial game state (config, max bet, and balance) in one batch
           await loadGameState(logic);
+
+          // Add network change listener
+          if (provider.on) {
+            provider.on('chainChanged', (chainId: any) => {
+              console.log('Chain changed to:', chainId);
+              const chainIdStr = typeof chainId === 'string' ? chainId : chainId.chainId || chainId;
+              const isCorrect = chainIdStr === `0x${tenChain.id.toString(16)}`;
+              setIsOnCorrectNetwork(isCorrect);
+              
+              if (isCorrect) {
+                // Re-initialize when switching to correct network
+                setError('');
+                const logic = new BlockchainGameLogic(provider, wallet.address);
+                setGameLogic(logic);
+                loadGameState(logic);
+              } else {
+                // Clear game state when switching to wrong network
+                setGameLogic(null);
+                setGameConfig(null);
+                setCurrentMaxBet('0');
+                setEthBalance('0');
+                setError('');
+              }
+            });
+          }
         } catch (error) {
           console.error('Failed to initialize blockchain logic:', error);
           setError('Failed to initialize wallet connection');
@@ -78,10 +128,19 @@ export function useBlockchain() {
       // Call the async function
       initializeWallet();
     }
-  }, [wallets, authenticated]); // Removed fetchBalance dependency to prevent loop
+  }, [wallets, authenticated, checkNetwork]); // Added checkNetwork dependency
 
   const loadGameState = async (logic: BlockchainGameLogic) => {
     try {
+      // Check network again before loading game state
+      if (wallets.length > 0) {
+        const onCorrectNetwork = await checkNetwork(wallets[0]);
+        if (!onCorrectNetwork) {
+          // Don't load game state if on wrong network
+          return;
+        }
+      }
+
       // Load all game state in one batch call
       const { config, maxBet, balance } = await logic.getGameState(wallets[0].address);
       
@@ -93,7 +152,10 @@ export function useBlockchain() {
       setBetAmount(formatEther(config.minBet));
     } catch (err) {
       console.error('Failed to load game state:', err);
-      setError('Failed to load game state');
+      // Only set error if we're on the correct network
+      if (isOnCorrectNetwork) {
+        setError('Failed to load game state');
+      }
     }
   };
 
@@ -189,6 +251,8 @@ export function useBlockchain() {
     getBetBreakdown,
     isConnected: authenticated && wallets.length > 0,
     walletAddress: wallets[0]?.address,
-    authenticated
+    authenticated,
+    isOnCorrectNetwork,
+    checkNetwork: () => wallets.length > 0 ? checkNetwork(wallets[0]) : Promise.resolve(false)
   };
 }
